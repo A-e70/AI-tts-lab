@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultra TTS</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #0a0d3f; /* Dark blue background */
+        color: #ffffff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        margin: 50px auto;
+        padding: 30px;
+        background: #121a70; /* darker tech box */
+        border-radius: 20px;
+        box-shadow: 0 0 40px #00ffff;
+        width: 450px;
+    }
+
+    h1 {
+        color: #00ffff; 
+        text-shadow: 0 0 15px #00ffff;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        margin: 15px 0;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #00ffff;
+        background-color: #0a0d3f;
+        color: #fff;
+        font-size: 16px;
+        resize: none;
+    }
+
+    select, input[type=number], button {
+        margin: 10px;
+        padding: 10px 15px;
+        border-radius: 10px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button {
+        background-color: #00ffff;
+        color: #0a0d3f;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background-color: #0088cc;
+        color: #fff;
+        box-shadow: 0 0 15px #00ffff;
+    }
+
+    audio {
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    a.download, a.copy-link {
+        color: #00ffff;
+        text-decoration: none;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    a.download:hover, a.copy-link:hover {
+        text-decoration: underline;
+    }
+
+    .history {
+        margin-top: 20px;
+        text-align: left;
+        max-height: 150px;
+        overflow-y: auto;
+        padding: 10px;
+        border: 1px solid #00ffff;
+        border-radius: 10px;
+        background: #0a0d3f;
+    }
+
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Ultra AI Voice TTS</h1>
+    <form method="POST">
+        <textarea name="text" placeholder="Type your text here..." required>{{ request.form.text }}</textarea>
+        <br>
+        <label for="voice">Voice:</label>
+        <select name="voice">
+            {% for voice in voices %}
+            <option value="{{ voice }}" {% if request.form.voice == voice %}selected{% endif %}>{{ voice }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="speed">Speed (0.5-2.0):</label>
+        <input type="number" name="speed" step="0.1" min="0.5" max="2.0" value="{{ request.form.speed or 1.0 }}">
+        <br>
+        <label for="volume">Volume (0.0-1.0):</label>
+        <input type="number" name="volume" step="0.1" min="0.0" max="1.0" value="{{ request.form.volume or 1.0 }}">
+        <br>
+        <button type="submit">Generate Voice</button>
+    </form>
+
+    {% if audio_file %}
+    <hr>
+    <audio controls autoplay>
+        <source src="{{ url_for('static', filename=audio_file) }}?v={{ range(1, 999) | random }}" type="audio/mpeg">
+    </audio>
+    <br>
+    <a href="/download?file={{ audio_file }}" class="download">Download MP3</a>
+    <a href="{{ url_for('static', filename=audio_file) }}" class="copy-link" onclick="copyLink(event)">Copy Link</a>
+    {% endif %}
+
+    {% if history %}
+    <div class="history">
+        <h3>History:</h3>
+        <ul>
+            {% for file in history %}
+            <li>
+                <a href="{{ url_for('static', filename=file) }}" target="_blank">{{ file }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function copyLink(e) {
+    e.preventDefault();
+    navigator.clipboard.writeText(e.target.href);
+    alert("Link copied to clipboard!");
+}
+</script>
+</body>
+</html>
+       
