@@ -1,42 +1,18 @@
-Ultra AI Voice TTS
+Ultra AI Voice TTS: High-Fidelity Audio Synthesis Lab
 
-A professional web-based Text-to-Speech (TTS) application designed for high-fidelity audio synthesis. This system provides a streamlined interface for converting text into natural-sounding speech with granular control over vocal characteristics.
-Project Overview
+This system provides a professional-grade web interface for converting text into natural-sounding speech with granular control over vocal characteristics. The architecture focuses on low-latency processing and a modern, high-contrast user experience for localized AI audio generation.
+Core Logic:
 
-This application serves as a localized AI voice generation lab. It leverages a Python-based backend to process text input and output audio through a modern, responsive web interface. The architecture is optimized for low-latency conversion and ease of deployment.
-Core Features
+    Synthesis Engine: Processes raw text input into high-fidelity audio output via a Python-based backend.
 
-    Parameter Customization: Users can adjust speech rate (0.5 to 2.0) and output volume (0.0 to 1.0) for precise audio delivery.
+    Parameter Modulator: Dynamically adjusts speech rate and volume based on precise user-defined variables.
 
-    Voice Profiles: Integrated support for multiple voice identities, including male and female profiles.
+    Identity Switcher: Toggles between optimized male and female voice profiles for versatile audio delivery.
 
-    Dark-Mode Interface: A high-contrast, professional UI designed for extended use and visual clarity.
+Technical Features:
 
-    Local Deployment: Fully functional on local server environments (default port 5000).
+    Granular Audio Control: Real-time modulation of speed (0.5 to 2.0) and output intensity (0.0 to 1.0).
 
-Technical Specification
+    Streamlined UI Architecture: A responsive, dark-mode frontend built for visual clarity and operational efficiency.
 
-    Backend Framework: Python (Flask/FastAPI)
-
-    Frontend: HTML5, CSS3, JavaScript
-
-    Default Host: http://127.0.0.1:5000
-
-Installation and Usage
-
-    Clone the repository:
-    Bash
-
-    git clone https://github.com/A-e70/AI-tts-lab.git
-
-    Enter the project directory:
-    Bash
-
-    cd AI-tts-lab
-
-    Initialize the application:
-    Bash
-
-    python app.py
-
-    Access the web interface via a browser at the local host address.
+    Localized Server Deployment: Optimized for secure, local-host execution on port 5000.
