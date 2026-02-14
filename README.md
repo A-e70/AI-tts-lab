@@ -26,10 +26,10 @@ This system provides a professional-grade web interface for converting text into
 3. **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
+   
    4. **Launch Application:**
-   ```bash
-   python app.py
-   Usage
+```bash
+python app.py
 
 Once the server is initialized, navigate to http://127.0.0.1:5000 in your web browser. Input the desired text, adjust the vocal parameters via the user interface, and select Generate Voice to synthesize the audio output.
 
