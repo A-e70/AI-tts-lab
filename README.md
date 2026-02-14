@@ -29,7 +29,7 @@ This system provides a professional-grade web interface for converting text into
    
  4. **Launch Application:**
 ~~~~bash
-python app.py
+   python app.py
 ~~~~
 Usage
 
