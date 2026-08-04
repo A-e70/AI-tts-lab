@@ -1,36 +1,37 @@
-# Ultra AI Voice TTS: High-Fidelity Audio Synthesis Lab
+# AI TTS Lab
 
-This system provides a professional-grade web interface for converting text into natural-sounding speech with granular control over vocal characteristics. The architecture focuses on low-latency processing and a modern, high-contrast user experience for localized AI audio generation.
+A small Flask web interface for the ElevenLabs text to speech API. Type text, pick a voice, get an MP3 back, and keep a history of what you generated.
 
-### Core Logic:
-* **Synthesis Engine:** Processes raw text input into high-fidelity audio output via a Python-based backend.
-* **Parameter Modulator:** Dynamically adjusts speech rate and volume based on precise user-defined variables.
-* **Identity Switcher:** Toggles between optimized male and female voice profiles for versatile audio delivery.
+To be clear about what this is: the speech synthesis is done by ElevenLabs. This is the interface around it, not a synthesis engine.
 
-### Technical Features:
-* **Granular Audio Control:** Real-time modulation of speed (0.5 to 2.0) and output intensity (0.0 to 1.0).
-* **Streamlined UI Architecture:** A responsive, dark-mode frontend built for visual clarity and operational efficiency.
-* **Localized Server Deployment:** Optimized for secure, local-host execution on port 5000.
+## Running it
 
-### Installation and Setup:
-1. **Clone the Repository:**
-   ```bash
-   git clone [https://github.com/A-e70/AI-tts-lab.git](https://github.com/A-e70/AI-tts-lab.git)
-   ### Installation and Setup:
+```bash
+pip install -r requirements.txt
+export ELEVEN_API_KEY='your-key'     # from elevenlabs.io
+python app.py
+```
 
-2. **Navigate to Directory:**
-   ```bash
-   cd AI-tts-lab
-   ### Installation and Setup (Continued)
+Then open <http://127.0.0.1:5000>.
 
-3. **Install Dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   
- 4. **Launch Application:**
-   ~~~~bash
-   python app.py
-   ~~~~
-Usage
+The key is read from the environment and is never written to disk or committed.
 
-Once the server is initialized, navigate to http://127.0.0.1:5000 in your web browser. Input the desired text, adjust the vocal parameters via the user interface, and select Generate Voice to synthesize the audio output.
+## What it does
+
+- Sends text to the ElevenLabs API and saves the returned MP3 to `static/`, timestamped
+- Two preset voices, selectable from a dropdown
+- A running list of everything generated this session, each downloadable
+
+## What it does not do yet
+
+The interface has speed and volume sliders. Their values reach the backend but are not applied to the request, so moving them currently changes nothing about the output. They are left visible rather than removed, because wiring them to the API's voice settings is the obvious next change.
+
+## Fixed since the first version
+
+**The API key was never assigned.** It was referenced when building the request headers but never set anywhere in the file, so a fresh clone raised a `NameError` on the first generation. It now comes from `ELEVEN_API_KEY`, and the app refuses to start without it.
+
+**The download route could serve any file on the machine.** The filename came from the query string and was interpolated straight into a path, so `?file=../../../etc/passwd` walked out of the static folder. The path is now resolved and checked to be inside `static/` before anything is sent.
+
+## Licence
+
+MIT.

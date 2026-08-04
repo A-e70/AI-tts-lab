@@ -1,7 +1,19 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, abort
 import requests
 import os
 from datetime import datetime
+from pathlib import Path
+
+# Read the key from the environment. It was previously referenced but never
+# assigned, so a fresh clone crashed with a NameError on the first request.
+ELEVEN_API_KEY = os.environ.get("ELEVEN_API_KEY")
+if not ELEVEN_API_KEY:
+    raise SystemExit(
+        "Set ELEVEN_API_KEY before starting.\n"
+        "  export ELEVEN_API_KEY='your-key'   (get one at elevenlabs.io)"
+    )
+
+STATIC = Path(__file__).parent / "static"
 
 # Voices: Male and Female
 VOICES = {
@@ -59,11 +71,20 @@ def index():
 
 @app.route("/download")
 def download():
-    file = request.args.get("file")
-    if file and os.path.exists(f"static/{file}"):
-        return send_file(f"static/{file}", as_attachment=True)
-    return "No audio found", 404
+    """Serve a generated file.
+
+    The filename arrives from the query string, so it is resolved and checked
+    against the static directory before use. Without that, ../../ walked out of
+    the folder and served arbitrary files off the disk.
+    """
+    name = request.args.get("file", "")
+    if not name:
+        return "No audio found", 404
+    target = (STATIC / name).resolve()
+    if STATIC.resolve() not in target.parents or not target.is_file():
+        abort(404)
+    return send_file(target, as_attachment=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1")
 
